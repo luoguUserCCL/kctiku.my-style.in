@@ -13,7 +13,7 @@ define('DB_PASS', '****');
 define('DB_CHARSET', 'utf8mb4');
 
 // 管理员密码（用于管理后台登录）
-define('ADMIN_PASSWORD', 'admin123');
+define('ADMIN_PASSWORD', '****');
 
 // 时区设置
 date_default_timezone_set('Asia/Shanghai');
