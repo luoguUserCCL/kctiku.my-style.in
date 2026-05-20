@@ -12,45 +12,7 @@
 - 📐 数学公式：支持 KaTeX 数学公式渲染
 - 🖼️ 图片支持：题目可插入图片（Base64 存储）
 
-## 部署到 InfinityFree
-
-### 第一步：注册 InfinityFree 账号
-
-1. 访问 [InfinityFree](https://infinityfree.net/)
-2. 点击 "Sign Up" 注册账号
-3. 验证邮箱
-
-### 第二步：创建托管账号
-
-1. 登录后点击 "Create Account"
-2. 选择免费计划
-3. 填写域名（如：kctiku.rf.gd）
-4. 完成创建
-
-### 第三步：创建 MySQL 数据库
-
-1. 进入控制面板
-2. 点击 "MySQL Databases"
-3. 创建新数据库
-4. **记录以下信息**：
-   - 数据库名
-   - 用户名
-   - 密码
-   - 数据库主机（通常是 localhost）
-
-### 第四步：导入数据库表
-
-1. 进入 phpMyAdmin
-2. 选择刚创建的数据库
-3. 点击 "导入"
-4. 选择 `database.sql` 文件并执行
-
-### 第五步：上传文件
-
-1. 使用 FTP 或文件管理器上传所有文件
-2. 上传到 `htdocs` 目录
-
-### 第六步：配置数据库连接
+---
 
 编辑 `config.php` 文件，修改数据库连接信息：
 
@@ -60,10 +22,6 @@ define('DB_NAME', 'your_database_name');  // 数据库名称
 define('DB_USER', 'your_username');       // 数据库用户名
 define('DB_PASS', 'your_password');       // 数据库密码
 ```
-
-### 第七步：访问网站
-
-访问你的域名，即可开始使用！
 
 ## 使用说明
 
@@ -138,7 +96,3 @@ kc-tiku-php/
 1. **修改管理密码**：编辑 `config.php` 中的 `ADMIN_PASSWORD`
 2. **设置做题密码**：在管理后台设置做题权限
 3. **定期备份**：定期导出数据库备份
-
-## 许可证
-
-MIT License
