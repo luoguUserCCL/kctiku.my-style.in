@@ -95,26 +95,42 @@ function renderMarkdown(content) {
         return `%%BASE64_IMG_${index}%%`;
     });
     
+    // Step 1: Extract KaTeX math and replace with placeholders BEFORE markdown parsing
+    // This prevents marked from HTML-encoding characters like > < inside math
+    const mathPlaceholders = [];
+    
+    // First handle display math $$...$$
+    tempContent = tempContent.replace(/\$\$([\s\S]*?)\$\$/g, (match, tex) => {
+        const index = mathPlaceholders.length;
+        try {
+            mathPlaceholders.push(katex.renderToString(tex, { displayMode: true, throwOnError: false }));
+        } catch (e) {
+            mathPlaceholders.push(match);
+        }
+        return `%%MATH_${index}%%`;
+    });
+    
+    // Then handle inline math $...$
+    tempContent = tempContent.replace(/\$([^$\n]+?)\$/g, (match, tex) => {
+        const index = mathPlaceholders.length;
+        try {
+            mathPlaceholders.push(katex.renderToString(tex, { displayMode: false, throwOnError: false }));
+        } catch (e) {
+            mathPlaceholders.push(match);
+        }
+        return `%%MATH_${index}%%`;
+    });
+    
+    // Step 2: Parse markdown (now math placeholders won't be corrupted)
     let html = marked.parse(tempContent);
+    
+    // Step 3: Restore math placeholders
+    mathPlaceholders.forEach((rendered, index) => {
+        html = html.replace(`%%MATH_${index}%%`, rendered);
+    });
     
     base64Images.forEach((img, index) => {
         html = html.replace(`%%BASE64_IMG_${index}%%`, `<img src="data:image/${img.type};base64,${img.data}" alt="${escapeHtml(img.alt)}" style="max-width:100%;border-radius:8px;margin:8px 0;">`);
-    });
-    
-    html = html.replace(/\$\$(.*?)\$\$/gs, (match, tex) => {
-        try {
-            return katex.renderToString(tex, { displayMode: true, throwOnError: false });
-        } catch (e) {
-            return match;
-        }
-    });
-    
-    html = html.replace(/\$([^$\n]+?)\$/g, (match, tex) => {
-        try {
-            return katex.renderToString(tex, { displayMode: false, throwOnError: false });
-        } catch (e) {
-            return match;
-        }
     });
     
     return html;
